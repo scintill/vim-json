@@ -19,7 +19,7 @@ syntax match   jsonNoise           /\%(:\|,\)/
 
 " Syntax: Strings
 " Separated into a match and region because a region by itself is always greedy
-syn match  jsonStringMatch /"\([^"]\|\\\"\)\+"\ze[[:blank:]\r\n]*[,}\]]/ contains=jsonString
+syn match  jsonStringMatch /"\([^"]\|\\\"\)\+"\ze[[:blank:]\r\n]*[,}\]#]/ contains=jsonString
 if has('conceal')
 	syn region  jsonString oneline matchgroup=jsonQuote start=/"/  skip=/\\\\\|\\"/  end=/"/ concealends contains=jsonEscape contained
 else
@@ -60,6 +60,8 @@ if (!exists("g:vim_json_warnings") || g:vim_json_warnings==1)
 	" Syntax: No comments in JSON, see http://stackoverflow.com/questions/244777/can-i-comment-a-json-file
 	syn match   jsonCommentError  "//.*"
 	syn match   jsonCommentError  "\(/\*\)\|\(\*/\)"
+	" Syntax: Nonstandard comment
+	syn match   jsonComment  "##.*"
 
 	" Syntax: No semicolons in JSON
 	syn match   jsonSemicolonError  ";"
@@ -124,6 +126,7 @@ if version >= 508 || !exists("did_json_syn_inits")
   endif
   HiLink jsonQuote           Quote
   HiLink jsonNoise           Noise
+  HiLink jsonComment         Comment
   delcommand HiLink
 endif
 
